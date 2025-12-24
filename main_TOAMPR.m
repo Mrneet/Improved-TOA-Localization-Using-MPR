@@ -74,20 +74,8 @@ for ir = 1:length(souRange)
             rNsed = r + nse;
 
             ia = 1;
-            %%%% initial solution
-            W = eye(M);%inv(Q);
-            tic;
-            [iniMPR,iniCar] = TOA_MPR_SDR(senPos,rNsed,W);
-            totalTime(ia) = totalTime(ia) + toc;
-            mprSol(:,m,ia) = iniMPR;
-            carSol(:,m,ia) = iniCar;
-
-            %%%% the second step cvx
-            ia = ia + 1; tic;
-            psi1 = [cos(iniMPR(1))*cos(iniMPR(2)); sin(iniMPR(1))*cos(iniMPR(2)); sin(iniMPR(2)); iniMPR(3)];
-            B = diag(sqrt(sum((psi1(1:N)-psi1(N+1)*senPos).^2,1)));
-            W = inv(B*Q*B);
-            [mpr2SDR,car2SDR] = TOA_MPR_SDR(senPos,rNsed,W);
+            %%%% proposed 2S-SDR
+            [mpr2SDR,car2SDR] = TOA_MPR_2SSDR(senPos,rNsed,Q);
             totalTime(ia) = totalTime(ia) + toc;
             mprSol(:,m,ia) = mpr2SDR;
             carSol(:,m,ia) = car2SDR;
